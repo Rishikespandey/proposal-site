@@ -195,7 +195,10 @@ function showFinalRomanticScreen() {
             <div class="final-emoji">👧</div>
         </div>
         <h1>I Love You So Much ❤️</h1>
-        <p>You just made me the happiest person 🥹</p>
+        <p>
+You just made me the happiest person in the world 🥹❤️<br><br>
+I don’t know what I did to deserve someone as beautiful, special and amazing as you, but I promise I’ll spend every day making you smile. From today, my heart is yours forever. No matter what happens, I’ll always choose you, care for you, stand by you and love you more than words can ever explain ❤️✨
+</p>
     `;
     document.body.appendChild(finalScreen);
 }

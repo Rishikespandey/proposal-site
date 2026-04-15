@@ -1,0 +1,466 @@
+/* style.css - Romantic Proposal Website */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(145deg, #ff9a9e 0%, #fecfef 45%, #ff6a88 100%);
+    background-attachment: fixed;
+    font-family: 'Poppins', 'Quicksand', 'Segoe UI', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+/* Floating Hearts Background Animation */
+.floating-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.heart-bg {
+    position: absolute;
+    bottom: -50px;
+    font-size: 1.8rem;
+    opacity: 0.7;
+    animation: floatUp linear infinite;
+    pointer-events: none;
+    color: rgba(255, 80, 120, 0.85);
+    text-shadow: 0 0 5px rgba(255, 200, 200, 0.9);
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Main Proposal Card */
+.proposal-container {
+    position: relative;
+    z-index: 20;
+    width: 100%;
+    max-width: 650px;
+    animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.proposal-card {
+    background: rgba(255, 245, 245, 0.88);
+    backdrop-filter: blur(14px);
+    border-radius: 72px;
+    padding: 2.5rem 2rem 3rem;
+    text-align: center;
+    box-shadow: 0 35px 55px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.name-section {
+    margin-bottom: 0.5rem;
+}
+
+.girl-name {
+    font-size: 3.4rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #b83b5e, #f24c6e);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.08);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.heart-icon {
+    font-size: 3.2rem;
+    background: none;
+    color: #ff3366;
+    display: inline-block;
+    animation: heartbeat 1.5s ease infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.question-text {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 20px 0 35px;
+    color: #4a2b34;
+    text-shadow: 0 1px 2px rgba(255, 240, 220, 0.9);
+    letter-spacing: -0.3px;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.btn {
+    border: none;
+    padding: 16px 40px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s;
+    font-family: inherit;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-yes {
+    background: linear-gradient(120deg, #e43a5f, #ff6f91);
+    color: white;
+    border: 1px solid #fff9;
+}
+
+.btn-yes:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(120deg, #ff2f5e, #ff8aaa);
+}
+
+.btn-no {
+    background: #2d2f36;
+    color: #ffe6ea;
+    border: 1px solid #ffb6c1;
+    position: relative;
+    transition: none;
+    cursor: default;
+}
+
+/* Funny Toast Message */
+.funny-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff3366e6;
+    backdrop-filter: blur(10px);
+    color: #fff9e8;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 12px 28px;
+    border-radius: 60px;
+    z-index: 100;
+    font-family: 'Poppins', monospace;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    animation: fadeUpDown 1.8s ease forwards;
+    border-left: 6px solid gold;
+    font-weight: 600;
+}
+
+@keyframes fadeUpDown {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(25px);
+    }
+    15% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0px);
+    }
+    85% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0px);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-25px);
+        visibility: hidden;
+    }
+}
+
+/* Celebration Overlay */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 80, 100, 0.3), rgba(255, 50, 80, 0.2));
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    pointer-events: none;
+}
+
+/* Kissing Couple Animation */
+.kissing-couple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    background: rgba(255, 230, 230, 0.85);
+    padding: 25px 45px;
+    border-radius: 150px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    z-index: 160;
+    animation: couplePop 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.couple-emoji {
+    font-size: 5rem;
+    filter: drop-shadow(0 8px 12px rgba(0,0,0,0.2));
+    animation: sway 2s infinite ease-in-out;
+}
+
+.kiss-spark {
+    font-size: 3rem;
+    animation: kissBlink 0.6s infinite alternate;
+}
+
+@keyframes kissBlink {
+    0% { transform: scale(0.8); opacity: 0.6; text-shadow: 0 0 0px pink; }
+    100% { transform: scale(1.4); opacity: 1; text-shadow: 0 0 12px red; }
+}
+
+@keyframes sway {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes couplePop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Heart Burst Container */
+.heart-burst-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 155;
+}
+
+.burst-heart {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: fallDown 1.2s ease-out forwards;
+    color: #ff2e5a;
+    text-shadow: 0 0 6px white;
+    pointer-events: none;
+}
+
+@keyframes fallDown {
+    0% {
+        transform: translateY(-20vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Final Romantic Screen */
+.final-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, #ff4d6d, #b91c3f);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    animation: fadeGlow 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    backdrop-filter: blur(3px);
+    font-family: 'Poppins', 'Quicksand', sans-serif;
+    padding: 20px;
+}
+
+.final-kissing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 35px;
+    margin-bottom: 40px;
+    background: rgba(255, 245, 235, 0.2);
+    padding: 20px 50px;
+    border-radius: 200px;
+    backdrop-filter: blur(8px);
+    animation: floatGentle 2s infinite;
+}
+
+.final-kissing .final-emoji {
+    font-size: 5.5rem;
+    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.3));
+}
+
+.final-kiss-icon {
+    font-size: 4rem;
+    animation: kissFloat 0.8s infinite alternate;
+}
+
+@keyframes kissFloat {
+    from { transform: translateY(0px) scale(0.9); opacity: 0.8; }
+    to { transform: translateY(-12px) scale(1.2); opacity: 1; }
+}
+
+@keyframes floatGentle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.final-screen h1 {
+    font-size: 3.8rem;
+    color: #fffbe6;
+    text-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    margin: 20px 0 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.final-screen p {
+    font-size: 2rem;
+    color: #fff2cf;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 30px;
+    border-radius: 60px;
+    backdrop-filter: blur(5px);
+    font-weight: 500;
+}
+
+@keyframes fadeGlow {
+    0% {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 650px) {
+    .proposal-card {
+        padding: 1.8rem 1.2rem 2.2rem;
+        border-radius: 56px;
+    }
+    .girl-name {
+        font-size: 2.4rem;
+    }
+    .heart-icon {
+        font-size: 2.4rem;
+    }
+    .question-text {
+        font-size: 1.7rem;
+        margin: 15px 0 28px;
+    }
+    .btn {
+        padding: 12px 30px;
+        font-size: 1.3rem;
+    }
+    .button-group {
+        gap: 20px;
+    }
+    .funny-toast {
+        font-size: 0.95rem;
+        white-space: nowrap;
+        padding: 8px 20px;
+    }
+    .kissing-couple {
+        gap: 15px;
+        padding: 15px 28px;
+    }
+    .couple-emoji {
+        font-size: 3.2rem;
+    }
+    .kiss-spark {
+        font-size: 2rem;
+    }
+    .final-screen h1 {
+        font-size: 2.4rem;
+    }
+    .final-screen p {
+        font-size: 1.4rem;
+    }
+    .final-kissing .final-emoji {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 10px 24px;
+        font-size: 1.2rem;
+    }
+    .question-text {
+        font-size: 1.5rem;
+    }
+    .girl-name {
+        font-size: 2rem;
+    }
+}
+
+/* No button moving style (fixed positioning when evading) */
+.moving-no {
+    position: fixed !important;
+    transition: all 0.02s linear;
+    z-index: 1000;
+    cursor: grab;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}

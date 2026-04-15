@@ -311,7 +311,7 @@ body {
     }
 }
 
-/* Final Romantic Screen */
+/* Final Romantic Screen - UPDATED FOR SCROLLING ON MOBILE */
 .final-screen {
     position: fixed;
     top: 0;
@@ -328,7 +328,36 @@ body {
     animation: fadeGlow 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     backdrop-filter: blur(3px);
     font-family: 'Poppins', 'Quicksand', sans-serif;
-    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 40px 20px;
+}
+
+/* Custom scrollbar for final screen */
+.final-screen::-webkit-scrollbar {
+    width: 5px;
+}
+
+.final-screen::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.final-screen::-webkit-scrollbar-thumb {
+    background: rgba(255, 200, 200, 0.8);
+    border-radius: 10px;
+}
+
+/* Wrapper to ensure content stays centered while scrolling */
+.final-content-wrapper {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: auto;
 }
 
 .final-kissing {
@@ -337,11 +366,13 @@ body {
     justify-content: center;
     gap: 35px;
     margin-bottom: 40px;
+    margin-top: 20px;
     background: rgba(255, 245, 235, 0.2);
     padding: 20px 50px;
     border-radius: 200px;
     backdrop-filter: blur(8px);
     animation: floatGentle 2s infinite;
+    flex-wrap: wrap;
 }
 
 .final-kissing .final-emoji {
@@ -371,16 +402,23 @@ body {
     margin: 20px 0 20px;
     font-weight: 800;
     letter-spacing: 2px;
+    line-height: 1.2;
+    padding: 0 10px;
 }
 
 .final-screen p {
     font-size: 2rem;
     color: #fff2cf;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 12px 30px;
-    border-radius: 60px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 20px 25px;
+    border-radius: 40px;
     backdrop-filter: blur(5px);
     font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @keyframes fadeGlow {
@@ -394,7 +432,7 @@ body {
     }
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive - Enhanced for scrollability */
 @media (max-width: 650px) {
     .proposal-card {
         padding: 1.8rem 1.2rem 2.2rem;
@@ -432,14 +470,36 @@ body {
     .kiss-spark {
         font-size: 2rem;
     }
+    
+    /* Final screen mobile adjustments */
+    .final-screen {
+        padding: 30px 16px;
+    }
+    
     .final-screen h1 {
         font-size: 2.4rem;
+        margin: 15px 0;
     }
+    
     .final-screen p {
         font-size: 1.4rem;
+        padding: 16px 20px;
+        line-height: 1.5;
     }
+    
+    .final-kissing {
+        gap: 20px;
+        padding: 15px 30px;
+        margin-bottom: 25px;
+        margin-top: 10px;
+    }
+    
     .final-kissing .final-emoji {
         font-size: 3.5rem;
+    }
+    
+    .final-kiss-icon {
+        font-size: 2.8rem;
     }
 }
 
@@ -453,6 +513,63 @@ body {
     }
     .girl-name {
         font-size: 2rem;
+    }
+    
+    /* Extra small devices */
+    .final-screen {
+        padding: 20px 12px;
+    }
+    
+    .final-screen h1 {
+        font-size: 2rem;
+        margin: 10px 0;
+    }
+    
+    .final-screen p {
+        font-size: 1.2rem;
+        padding: 14px 16px;
+        line-height: 1.5;
+        max-width: 95%;
+    }
+    
+    .final-kissing {
+        gap: 12px;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+    }
+    
+    .final-kissing .final-emoji {
+        font-size: 2.8rem;
+    }
+    
+    .final-kiss-icon {
+        font-size: 2.2rem;
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 850px) and (orientation: landscape) {
+    .final-screen {
+        padding: 20px;
+    }
+    
+    .final-screen h1 {
+        font-size: 2rem;
+        margin: 10px 0;
+    }
+    
+    .final-screen p {
+        font-size: 1.2rem;
+        padding: 12px 20px;
+    }
+    
+    .final-kissing {
+        margin-bottom: 20px;
+        padding: 10px 25px;
+    }
+    
+    .final-kissing .final-emoji {
+        font-size: 2.8rem;
     }
 }
 

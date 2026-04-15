@@ -20,10 +20,15 @@ const funnyMessages = [
 
 // Global flag to prevent multiple final screens
 let isProposalAccepted = false;
+let noButtonMoveTimeout = null; // To prevent too many rapid moves
+let floatingHeartInterval = null; // To store interval for cleanup
 
 // ---------- Floating Hearts Background (continuous) ----------
 function startFloatingHearts() {
-    setInterval(() => {
+    // Clear existing interval if any
+    if (floatingHeartInterval) clearInterval(floatingHeartInterval);
+    
+    floatingHeartInterval = setInterval(() => {
         const heart = document.createElement('div');
         heart.className = 'heart-bg';
         const heartsList = ['❤️', '💖', '💗', '💘', '💝', '❣️', '❤️‍🔥', '💞'];
@@ -57,6 +62,8 @@ function showFunnyMessage() {
 
 // Helper: get random safe position for No button
 function getRandomPosition(btn) {
+    if (!btn) return { x: 10, y: 70 };
+    
     const btnWidth = btn.offsetWidth;
     const btnHeight = btn.offsetHeight;
     const margin = 20;
@@ -64,14 +71,22 @@ function getRandomPosition(btn) {
     const maxY = window.innerHeight - btnHeight - margin;
     const minX = 10;
     const minY = 70;
-    const randX = Math.floor(Math.random() * (maxX - minX + 1) + minX);
-    const randY = Math.floor(Math.random() * (maxY - minY + 1) + minY);
+    
+    // Ensure we don't get negative values
+    const safeMaxX = Math.max(minX, maxX);
+    const safeMaxY = Math.max(minY, maxY);
+    
+    const randX = Math.floor(Math.random() * (safeMaxX - minX + 1) + minX);
+    const randY = Math.floor(Math.random() * (safeMaxY - minY + 1) + minY);
     return { x: randX, y: randY };
 }
 
 // Make No button move to random location with rotation & quick wiggle
 function evadeNoButton() {
+    // Prevent too many rapid moves
+    if (noButtonMoveTimeout) return;
     if (isProposalAccepted) return;
+    if (!noButton) return;
     
     if (!noButton.classList.contains('moving-no')) {
         noButton.classList.add('moving-no');
@@ -90,13 +105,16 @@ function evadeNoButton() {
     noButton.style.transform = `rotate(${microRotate}deg) translate(${shiftX}px, ${shiftY}px)`;
     
     // After tiny delay, teleport to new position with new rotation
-    setTimeout(() => {
-        const newPos = getRandomPosition(noButton);
-        const newRotation = (Math.random() * 80) - 40;
-        noButton.style.top = newPos.y + 'px';
-        noButton.style.left = newPos.x + 'px';
-        noButton.style.transform = `rotate(${newRotation}deg)`;
-        showFunnyMessage();
+    noButtonMoveTimeout = setTimeout(() => {
+        if (noButton && !isProposalAccepted) {
+            const newPos = getRandomPosition(noButton);
+            const newRotation = (Math.random() * 80) - 40;
+            noButton.style.top = newPos.y + 'px';
+            noButton.style.left = newPos.x + 'px';
+            noButton.style.transform = `rotate(${newRotation}deg)`;
+            showFunnyMessage();
+        }
+        noButtonMoveTimeout = null;
     }, 30);
 }
 
@@ -104,23 +122,30 @@ function evadeNoButton() {
 function handleProximity(event) {
     if (isProposalAccepted) return;
     if (!noButton) return;
-    const rect = noButton.getBoundingClientRect();
-    let clientX, clientY;
     
-    if (event.touches) {
-        clientX = event.touches[0].clientX;
-        clientY = event.touches[0].clientY;
-    } else {
-        clientX = event.clientX;
-        clientY = event.clientY;
-    }
-    
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const distance = Math.hypot(clientX - centerX, clientY - centerY);
-    
-    if (distance < 90) {
-        evadeNoButton();
+    try {
+        const rect = noButton.getBoundingClientRect();
+        let clientX, clientY;
+        
+        if (event.touches && event.touches.length > 0) {
+            clientX = event.touches[0].clientX;
+            clientY = event.touches[0].clientY;
+        } else if (event.clientX !== undefined) {
+            clientX = event.clientX;
+            clientY = event.clientY;
+        } else {
+            return;
+        }
+        
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(clientX - centerX, clientY - centerY);
+        
+        if (distance < 90) {
+            evadeNoButton();
+        }
+    } catch (e) {
+        // Silently fail if button doesn't exist anymore
     }
 }
 
@@ -139,8 +164,18 @@ function attachNoButtonEvents() {
     noButton.addEventListener('click', onNoClickAttempt);
     noButton.addEventListener('mouseenter', evadeNoButton);
     document.addEventListener('mousemove', handleProximity);
-    document.addEventListener('touchmove', handleProximity);
-    noButton.addEventListener('touchstart', onNoClickAttempt);
+    document.addEventListener('touchmove', handleProximity, { passive: false });
+    noButton.addEventListener('touchstart', onNoClickAttempt, { passive: false });
+}
+
+// Remove all evasion events (cleanup)
+function detachNoButtonEvents() {
+    if (!noButton) return;
+    noButton.removeEventListener('click', onNoClickAttempt);
+    noButton.removeEventListener('mouseenter', evadeNoButton);
+    noButton.removeEventListener('touchstart', onNoClickAttempt);
+    document.removeEventListener('mousemove', handleProximity);
+    document.removeEventListener('touchmove', handleProximity);
 }
 
 // --- Heart Burst Effect (50-100 hearts) ---
@@ -167,12 +202,12 @@ function showKissingCouple() {
     if (kissingDiv) {
         // reset animation by re-trigger
         kissingDiv.style.animation = 'none';
-        kissingDiv.offsetHeight;
+        kissingDiv.offsetHeight; // Force reflow
         kissingDiv.style.animation = 'couplePop 0.5s cubic-bezier(0.34, 1.2, 0.64, 1)';
     }
 }
 
-// Final romantic screen after 1 sec (replace page)
+// Final romantic screen after 1 sec (replace page) - UPDATED with scrollable wrapper
 function showFinalRomanticScreen() {
     // Remove proposal UI, celebration overlay, no button, etc.
     if (proposalContainer) proposalContainer.style.display = 'none';
@@ -185,20 +220,32 @@ function showFinalRomanticScreen() {
     const toastMsg = document.querySelector('.funny-toast');
     if (toastMsg) toastMsg.remove();
     
-    // Create final screen
+    // Clear floating hearts interval
+    if (floatingHeartInterval) {
+        clearInterval(floatingHeartInterval);
+        floatingHeartInterval = null;
+    }
+    
+    // Remove all floating hearts
+    const allFloatingHearts = document.querySelectorAll('.heart-bg');
+    allFloatingHearts.forEach(heart => heart.remove());
+    
+    // Create final screen with scrollable wrapper
     const finalScreen = document.createElement('div');
     finalScreen.className = 'final-screen';
     finalScreen.innerHTML = `
-        <div class="final-kissing">
-            <div class="final-emoji">👦</div>
-            <div class="final-kiss-icon">💋❤️💋</div>
-            <div class="final-emoji">👧</div>
+        <div class="final-content-wrapper">
+            <div class="final-kissing">
+                <div class="final-emoji">👦</div>
+                <div class="final-kiss-icon">💋❤️💋</div>
+                <div class="final-emoji">👧</div>
+            </div>
+            <h1>I Love You So Much ❤️</h1>
+            <p>
+                You just made me the happiest person in the world 🥹❤️<br><br>
+                I don't know what I did to deserve someone as beautiful, special and amazing as you, but I promise I'll spend every day making you smile. From today, my heart is yours forever. No matter what happens, I'll always choose you, care for you, stand by you and love you more than words can ever explain ❤️✨
+            </p>
         </div>
-        <h1>I Love You So Much ❤️</h1>
-        <p>
-You just made me the happiest person in the world 🥹❤️<br><br>
-I don’t know what I did to deserve someone as beautiful, special and amazing as you, but I promise I’ll spend every day making you smile. From today, my heart is yours forever. No matter what happens, I’ll always choose you, care for you, stand by you and love you more than words can ever explain ❤️✨
-</p>
     `;
     document.body.appendChild(finalScreen);
 }
@@ -207,6 +254,9 @@ I don’t know what I did to deserve someone as beautiful, special and amazing a
 function onYesClick() {
     if (isProposalAccepted) return;
     isProposalAccepted = true;
+    
+    // Detach no button events to prevent any further movements
+    detachNoButtonEvents();
     
     // Show celebration overlay with kissing couple
     celebrationOverlay.style.display = 'flex';
@@ -217,7 +267,7 @@ function onYesClick() {
     // Animate kissing couple (move closer + kiss animation)
     showKissingCouple();
     
-    // Also add class to make couple move closer via CSS transition (already styled but adding dynamic)
+    // Also add class to make couple move closer via CSS transition
     const couple = document.querySelector('.kissing-couple');
     if (couple) {
         couple.style.gap = '15px';
@@ -246,13 +296,25 @@ function handleResize() {
     }
 }
 
+// Cleanup function (optional, for page unload)
+function cleanup() {
+    if (floatingHeartInterval) {
+        clearInterval(floatingHeartInterval);
+    }
+    detachNoButtonEvents();
+    if (noButtonMoveTimeout) {
+        clearTimeout(noButtonMoveTimeout);
+    }
+}
+
 // Initialize everything
 function init() {
     startFloatingHearts();
     attachNoButtonEvents();
     yesButton.addEventListener('click', onYesClick);
     window.addEventListener('resize', handleResize);
-    // Optional: predefine girl name (Priya) is already in HTML, but easily customizable
+    // Optional cleanup on page unload
+    window.addEventListener('beforeunload', cleanup);
 }
 
 // Start the proposal magic
